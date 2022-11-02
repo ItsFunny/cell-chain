@@ -10,7 +10,10 @@ import (
 	"reflect"
 )
 
-type DDDHandler func(ctx *pipeline.Context) (types.CellResponse, error)
+type DDDHandler interface {
+	Handler(ctx *pipeline.Context) (types.CellResponse, error)
+	PredictMsg() types.CellRequest
+}
 
 type DDDComponent struct {
 	*services.BaseService
@@ -30,10 +33,11 @@ func (d *DDDComponent) OnStart(ctx *services.StartCTX) error {
 	return nil
 }
 
-func (d *DDDComponent) RegisterDDDHandler(msg reflect.Type, h DDDHandler) {
-	d.pip.RegisterFunc(msg, func(ctx *pipeline.Context) {
+func (d *DDDComponent) RegisterDDDHandler(h DDDHandler) {
+	msg := h.PredictMsg()
+	d.pip.RegisterFunc(reflect.TypeOf(msg), func(ctx *pipeline.Context) {
 		d.routine.AddJob(func() {
-			ret, err := h(ctx)
+			ret, err := h.Handler(ctx)
 			if nil != err {
 				ctx.Promise.Fail(err)
 			} else {
