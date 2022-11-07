@@ -11,7 +11,7 @@ import (
 )
 
 type DDDHandler interface {
-	Handler(ctx *pipeline.Context) (types.CellResponse, error)
+	Handler(ctx *pipeline.Context) (types.CellResponse, types.HandlerFlag, error)
 	PredictMsg() types.CellRequest
 }
 
@@ -37,10 +37,10 @@ func (d *DDDComponent) RegisterDDDHandler(h DDDHandler) {
 	msg := h.PredictMsg()
 	d.pip.RegisterFunc(reflect.TypeOf(msg), func(ctx *pipeline.Context) {
 		d.routine.AddJob(func() {
-			ret, err := h.Handler(ctx)
+			ret, flag, err := h.Handler(ctx)
 			if nil != err {
 				ctx.Promise.Fail(err)
-			} else {
+			} else if flag&types.HandlerFlagNotify >= types.HandlerFlagNotify {
 				ctx.Promise.TrySend(ret)
 			}
 		})
