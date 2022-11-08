@@ -16,7 +16,7 @@ func newPeer2PeerCommand(ddd *component.DDDComponent) reactor.ICommand {
 		Run: func(ctx reactor.IBuzzContext, reqData interface{}) error {
 			cellCtx := types.CellContext{}
 			cellCtx = cellCtx.FromHttpCtx(ctx)
-			ddd.Send(cellCtx, reqData)
+			ddd.Send(cellCtx, reqData.(*types2.Peer2PeerRequest))
 			return nil
 		},
 		Property: reactor.CommandProperty{

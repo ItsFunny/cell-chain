@@ -19,13 +19,11 @@ type HttpSendPeerDDDHandler struct {
 func (h HttpSendPeerDDDHandler) Handler(ctx *pipeline.Context) (types.CellResponse, types.HandlerFlag, error) {
 	req := ctx.Request.(types2.HttpSendToPeerRequest)
 	msg := req.Envelop
-	marshal, err := h.cdcComponent.Marshal(msg)
-	if nil != err {
-		return nil, types.HandlerFlagNotify, err
-	}
 	to := req.To
+	p2pReq := types2.NewPeer2PeerRequest(msg)
+	err := p2pReq.Send(h.cdcComponent, to.MetaData().GetOutPutAddress())
 
-	return nil, types.HandlerFlagNotify, nil
+	return nil, types.HandlerFlagNotify, err
 }
 
 func (h HttpSendPeerDDDHandler) PredictMsg() types.CellRequest {
