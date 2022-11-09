@@ -4,6 +4,7 @@ import (
 	"github.com/itsfunny/cell-chain/common/component"
 	"github.com/itsfunny/cell-chain/common/types"
 	types2 "github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/components/http/types"
+	types3 "github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/types"
 	"github.com/itsfunny/go-cell/base/reactor"
 	"github.com/itsfunny/go-cell/base/serialize"
 	"github.com/itsfunny/go-cell/framework/http/context"
@@ -11,7 +12,7 @@ import (
 
 func newPeer2PeerCommand(ddd *component.DDDComponent) reactor.ICommand {
 	return &reactor.Command{
-		ProtocolID: peer2peer,
+		ProtocolID: types3.Peer2Peer,
 		PreRun:     nil,
 		Run: func(ctx reactor.IBuzzContext, reqData interface{}) error {
 			cellCtx := types.CellContext{}

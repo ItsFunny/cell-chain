@@ -24,6 +24,13 @@ func (c CellContext) FromHttpCtx(ctx reactor.IBuzzContext) CellContext {
 	return c
 }
 
+func EmptyCellContext(ctx context.Context) CellContext {
+	ret := CellContext{
+		ctx: ctx,
+	}
+	return ret
+}
+
 type CellRequest interface {
 }
 
