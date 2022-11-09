@@ -2,13 +2,13 @@ package components
 
 import (
 	"github.com/itsfunny/cell-chain/common/component"
+	"github.com/itsfunny/cell-chain/common/enums"
 	sdk "github.com/itsfunny/cell-chain/common/types"
 	"github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/components/config"
 	"github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/types"
 	"github.com/itsfunny/go-cell/base/core/promise"
 	"github.com/itsfunny/go-cell/base/core/services"
-	types2 "github.com/itsfunny/go-cell/framework/rpc/grpc/common/types"
-	logsdk "github.com/itsfunny/go-cell/sdk/log"
+	"github.com/itsfunny/go-cell/component/codec"
 	"time"
 )
 
@@ -24,11 +24,12 @@ type BaseDiscoveryComponent struct {
 	Config *config.DiscoveryConfiguration
 }
 
-func NewBaseDiscoveryComponent(m logsdk.Module, ddd *component.DDDComponent,
+func NewBaseDiscoveryComponent(
+	ddd *component.DDDComponent, cdc *codec.CodecComponent,
 	peerManager types.IPeerManager,
 	internal types.DiscoveryComponent) *BaseDiscoveryComponent {
 	ret := &BaseDiscoveryComponent{peerManager: peerManager, internal: internal}
-	ret.BaseComponent = component.NewBaseComponent(m, internal, ddd)
+	ret.BaseComponent = component.NewBaseComponent(enums.DiscoveryModule, internal, ddd, cdc)
 	return ret
 }
 
@@ -47,7 +48,7 @@ func (b BaseDiscoveryComponent) pingPong() {
 			ctx := b.GetContext()
 			cellCtx := sdk.EmptyCellContext(ctx)
 			b.BroadCast(cellCtx, types.BroadCastRequest{
-				Envelop: types2.Envelope{},
+				Envelop: types.CreatePingPongEnvelopeRequest(b.GetCodec()),
 			})
 		}
 	}
