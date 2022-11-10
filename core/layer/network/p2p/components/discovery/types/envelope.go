@@ -15,9 +15,9 @@ func CreatePingEnvelopeRequest(cdc types.Codec, fromPeerId PeerId, fromOutPutAdd
 
 func CreateMemberShareEnvelopeRequest(cdc types.Codec, fromPeerId PeerId, mems map[PeerId]IPeerNode) *types2.Envelope {
 	seq := utils.GenerateSequenceId()
-	memMetas := make(map[PeerId]PeerMetaData)
+	memMetas := make(map[PeerId]string)
 	for id, v := range mems {
-		memMetas[id] = v.MetaData()
+		memMetas[id] = v.MetaData().GetOutPutAddress()
 	}
 	req := NewMembersShareRequest(fromPeerId, memMetas)
 	data, _ := cdc.Marshal(req)

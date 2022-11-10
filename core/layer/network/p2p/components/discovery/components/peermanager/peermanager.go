@@ -22,6 +22,12 @@ type DefaultPeerManager struct {
 	self types.IPeerNode
 }
 
+func (d *DefaultPeerManager) Have(node types.PeerId) bool {
+	d.mutex.RLock()
+	defer d.mutex.RUnlock()
+	return d.members[node] != nil
+}
+
 func NewDefaultPeerManager(ddd *component.DDDComponent, cdc *codec.CodecComponent) *DefaultPeerManager {
 	ret := &DefaultPeerManager{
 		mutex:   sync.RWMutex{},

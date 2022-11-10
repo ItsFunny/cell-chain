@@ -11,4 +11,6 @@ type DiscoveryComponent interface {
 	BroadCast(ctx types.CellContext, req BroadCastRequest) BroadCastResponse
 	SendToPeer(ctx types.CellContext, req SendToPeerRequest) (SendToPeerResponse, error)
 	SendToPeerAsync(ctx types.CellContext, req SendToPeerRequest) (*promise.Promise, error)
+	// TODO
+	//Handlers() []component.EnvelopeHandler
 }

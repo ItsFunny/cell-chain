@@ -18,6 +18,11 @@ type HttpDiscoveryComponent struct {
 	*components.BaseDiscoveryComponent
 }
 
+// TODO, wrapped with fx
+//func (b *HttpDiscoveryComponent) Handlers() []component.EnvelopeHandler {
+//	return
+//}
+
 func NewHttpDiscoveryComponent(ddd *component.DDDComponent, cdc *codec.CodecComponent,
 	peerManager types.IPeerManager,
 ) *HttpDiscoveryComponent {

@@ -101,6 +101,7 @@ func (b BaseDiscoveryComponent) BroadCast(ctx sdk.CellContext, req types.BroadCa
 		})
 		if nil != err {
 			b.Logger.Error("send to peer failed", "err", err.Error(), "id", id)
+			continue
 		}
 		promises = append(promises, p)
 	}
