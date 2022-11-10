@@ -9,6 +9,7 @@ import (
 	"github.com/itsfunny/go-cell/base/core/promise"
 	"github.com/itsfunny/go-cell/base/core/services"
 	"github.com/itsfunny/go-cell/component/codec"
+	types2 "github.com/itsfunny/go-cell/framework/rpc/grpc/common/types"
 	"time"
 )
 
@@ -18,18 +19,23 @@ var (
 
 type BaseDiscoveryComponent struct {
 	*component.BaseComponent
-	peerManager types.IPeerManager
+	PeerManager types.IPeerManager
 	internal    types.DiscoveryComponent
 
 	Config *config.DiscoveryConfiguration
+
+	pingPongEnvelopeCreateF func() *types2.Envelope
 }
 
 func NewBaseDiscoveryComponent(
 	ddd *component.DDDComponent, cdc *codec.CodecComponent,
 	peerManager types.IPeerManager,
-	internal types.DiscoveryComponent) *BaseDiscoveryComponent {
-	ret := &BaseDiscoveryComponent{peerManager: peerManager, internal: internal}
+	PingPongEnvelopeCreateF func() *types2.Envelope,
+	internal types.DiscoveryComponent,
+) *BaseDiscoveryComponent {
+	ret := &BaseDiscoveryComponent{PeerManager: peerManager, internal: internal}
 	ret.BaseComponent = component.NewBaseComponent(enums.DiscoveryModule, internal, ddd, cdc)
+	ret.pingPongEnvelopeCreateF = PingPongEnvelopeCreateF
 	return ret
 }
 
@@ -48,7 +54,7 @@ func (b BaseDiscoveryComponent) pingPong() {
 			ctx := b.GetContext()
 			cellCtx := sdk.EmptyCellContext(ctx)
 			b.BroadCast(cellCtx, types.BroadCastRequest{
-				Envelop: types.CreatePingPongEnvelopeRequest(b.GetCodec()),
+				Envelop: b.pingPongEnvelopeCreateF(),
 			})
 		}
 	}
@@ -68,7 +74,7 @@ func (b BaseDiscoveryComponent) SendToPeer(ctx sdk.CellContext, req types.SendTo
 }
 
 func (b BaseDiscoveryComponent) BroadCast(ctx sdk.CellContext, req types.BroadCastRequest) types.BroadCastResponse {
-	mems := b.peerManager.GetMembership()
+	mems := b.PeerManager.GetMembership()
 	promises := make([]*promise.Promise, 0)
 	for id, mem := range mems {
 		p, err := b.SendToPeerAsync(ctx, types.SendToPeerRequest{

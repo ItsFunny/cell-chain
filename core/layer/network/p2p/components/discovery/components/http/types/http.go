@@ -7,7 +7,7 @@ import (
 
 type HttpSendToPeerRequest struct {
 	To      types.IPeerNode
-	Envelop types2.Envelope
+	Envelop *types2.Envelope
 }
 
 func (h HttpSendToPeerRequest) From(request types.SendToPeerRequest) HttpSendToPeerRequest {

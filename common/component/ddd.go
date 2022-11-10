@@ -6,6 +6,7 @@ import (
 	"github.com/itsfunny/go-cell/base/core/promise"
 	"github.com/itsfunny/go-cell/base/core/services"
 	"github.com/itsfunny/go-cell/component/routine"
+	types2 "github.com/itsfunny/go-cell/framework/rpc/grpc/common/types"
 	"github.com/itsfunny/go-cell/sdk/pipeline"
 	"reflect"
 )
@@ -13,6 +14,11 @@ import (
 type DDDHandler interface {
 	Handler(ctx *pipeline.Context) (types.CellResponse, types.HandlerFlag, error)
 	PredictMsg() types.CellRequest
+}
+
+type EnvelopeHandler interface {
+	Handler(ctx *pipeline.Context, env *types2.Envelope) error
+	Protocol() string
 }
 
 type DDDComponent struct {

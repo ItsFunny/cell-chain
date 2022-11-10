@@ -17,13 +17,13 @@ func newPeer2PeerCommand(ddd *component.DDDComponent) reactor.ICommand {
 		Run: func(ctx reactor.IBuzzContext, reqData interface{}) error {
 			cellCtx := types.CellContext{}
 			cellCtx = cellCtx.FromHttpCtx(ctx)
-			ddd.Send(cellCtx, reqData.(*types2.Peer2PeerRequest))
+			ddd.Send(cellCtx, reqData.(*types2.HttpPeer2PeerRequest))
 			return nil
 		},
 		Property: reactor.CommandProperty{
 			Async: false,
 			RequestDataCreateF: func() reactor.ICommandSerialize {
-				return &types2.Peer2PeerRequest{}
+				return &types2.HttpPeer2PeerRequest{}
 			},
 			GetInputArchiveFromCtxFunc: func(ctx reactor.IBuzzContext) (serialize.IInputArchive, error) {
 				return context.GetByteJSONInputArchiveFromCtx(ctx)

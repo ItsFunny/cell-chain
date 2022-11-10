@@ -4,6 +4,7 @@ type PeerId string
 
 type IPeerManager interface {
 	GetMembership() map[PeerId]IPeerNode
+	GetSelfNode() IPeerNode
 	Register(wrapper PeerWrapper)
 }
 
