@@ -8,7 +8,6 @@ import (
 	"github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/types"
 	"github.com/itsfunny/go-cell/base/core/promise"
 	"github.com/itsfunny/go-cell/component/codec"
-	grpcTypes "github.com/itsfunny/go-cell/framework/rpc/grpc/common/types"
 )
 
 var (
@@ -23,7 +22,7 @@ func NewHttpDiscoveryComponent(ddd *component.DDDComponent, cdc *codec.CodecComp
 	peerManager types.IPeerManager,
 ) *HttpDiscoveryComponent {
 	ret := &HttpDiscoveryComponent{}
-	ret.BaseDiscoveryComponent = components.NewBaseDiscoveryComponent(ddd, cdc, peerManager, ret.PingPongEnvelopeCreate, ret)
+	ret.BaseDiscoveryComponent = components.NewBaseDiscoveryComponent(ddd, cdc, peerManager, ret)
 	return ret
 }
 
@@ -32,11 +31,4 @@ func (b *HttpDiscoveryComponent) SendToPeerAsync(ctx sdk.CellContext, req types.
 		ret := types2.HttpSendToPeerRequest{}
 		return ret.From(req)
 	})
-}
-
-func (b *HttpDiscoveryComponent) PingPongEnvelopeCreate() *grpcTypes.Envelope {
-	selfNode := b.PeerManager.GetSelfNode()
-	return types.CreatePingPongEnvelopeRequest(b.GetCodec(),
-		selfNode.PeerId(),
-		selfNode.MetaData().GetOutPutAddress())
 }

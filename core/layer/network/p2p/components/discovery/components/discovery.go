@@ -9,7 +9,6 @@ import (
 	"github.com/itsfunny/go-cell/base/core/promise"
 	"github.com/itsfunny/go-cell/base/core/services"
 	"github.com/itsfunny/go-cell/component/codec"
-	types2 "github.com/itsfunny/go-cell/framework/rpc/grpc/common/types"
 	"time"
 )
 
@@ -23,29 +22,26 @@ type BaseDiscoveryComponent struct {
 	internal    types.DiscoveryComponent
 
 	Config *config.DiscoveryConfiguration
-
-	pingPongEnvelopeCreateF func() *types2.Envelope
 }
 
 func NewBaseDiscoveryComponent(
 	ddd *component.DDDComponent, cdc *codec.CodecComponent,
 	peerManager types.IPeerManager,
-	PingPongEnvelopeCreateF func() *types2.Envelope,
 	internal types.DiscoveryComponent,
 ) *BaseDiscoveryComponent {
 	ret := &BaseDiscoveryComponent{PeerManager: peerManager, internal: internal}
 	ret.BaseComponent = component.NewBaseComponent(enums.DiscoveryModule, internal, ddd, cdc)
-	ret.pingPongEnvelopeCreateF = PingPongEnvelopeCreateF
 	return ret
 }
 
 func (b BaseDiscoveryComponent) OnStart(ctx *services.StartCTX) error {
-	go b.pingPong()
+	go b.periodPing()
+	go b.periodBroadCastMembers()
 	return nil
 }
 
-func (b BaseDiscoveryComponent) pingPong() {
-	timer := time.NewTimer(time.Second * time.Duration(b.Config.PingPongPeriod))
+func (b BaseDiscoveryComponent) periodPing() {
+	timer := time.NewTimer(time.Second * time.Duration(b.Config.PingPeriod))
 	for {
 		select {
 		case <-b.Quit():
@@ -53,9 +49,31 @@ func (b BaseDiscoveryComponent) pingPong() {
 		case <-timer.C:
 			ctx := b.GetContext()
 			cellCtx := sdk.EmptyCellContext(ctx)
+			selfNode := b.PeerManager.GetSelfNode()
 			b.BroadCast(cellCtx, types.BroadCastRequest{
-				Envelop: b.pingPongEnvelopeCreateF(),
+				Envelop: types.CreatePingEnvelopeRequest(b.GetCodec(),
+					selfNode.PeerId(),
+					selfNode.MetaData().GetOutPutAddress()),
 			})
+		}
+	}
+}
+
+func (b BaseDiscoveryComponent) periodBroadCastMembers() {
+	timer := time.NewTimer(time.Second * time.Duration(b.Config.MemberPeriod))
+	for {
+		select {
+		case <-b.Quit():
+			return
+		case <-timer.C:
+			selfNode := b.PeerManager.GetSelfNode()
+			members := b.PeerManager.GetMembership()
+			ctx := b.GetContext()
+			cellCtx := sdk.EmptyCellContext(ctx)
+			b.BroadCast(cellCtx, types.BroadCastRequest{
+				Envelop: types.CreateMemberShareEnvelopeRequest(b.GetCodec(),
+					selfNode.PeerId(), members)},
+			)
 		}
 	}
 }

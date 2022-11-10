@@ -1,5 +1,6 @@
 package config
 
 type DiscoveryConfiguration struct {
-	PingPongPeriod uint
+	PingPeriod   uint
+	MemberPeriod uint
 }
