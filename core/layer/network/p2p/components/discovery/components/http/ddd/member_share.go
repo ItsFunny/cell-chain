@@ -46,11 +46,11 @@ func (m *MemberShareHandler) Handler(ctx *pipeline.Context, env *types2.Envelope
 		}
 	}
 
-	removeUnknownPeers := make(map[types.PeerId]string)
+	remoteUnknownPeers := make(map[types.PeerId]string)
 	for id, v := range knwonPeers {
 		_, exist := remoteKnownPeers[id]
 		if !exist {
-			removeUnknownPeers[id] = v.MetaData().GetOutPutAddress()
+			remoteUnknownPeers[id] = v.MetaData().GetOutPutAddress()
 		}
 	}
 	// TODO sync metas
