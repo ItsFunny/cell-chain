@@ -38,11 +38,15 @@ func (m *MemberShareHandler) Handler(ctx *pipeline.Context, env *types2.Envelope
 		"known peers", knwonPeers, "msg", req.String())
 
 	unknownPeers := make(map[types.PeerId]string)
+	differPeers := make(map[types.PeerId]types.IPeerNode)
 	for id, v := range remoteKnownPeers {
-		_, exist := knwonPeers[id]
+		node, exist := knwonPeers[id]
 		if !exist {
 			unknownPeers[id] = v
 			continue
+		}
+		if v != node.MetaData().GetOutPutAddress() {
+			differPeers[id] = node
 		}
 	}
 
@@ -53,7 +57,14 @@ func (m *MemberShareHandler) Handler(ctx *pipeline.Context, env *types2.Envelope
 			remoteUnknownPeers[id] = v.MetaData().GetOutPutAddress()
 		}
 	}
-	// TODO sync metas
+	if len(unknownPeers) > 0 {
+		// probe
+	}
+
+	if len(remoteUnknownPeers) > 0 {
+		// help the remote node sync members
+
+	}
 	return nil
 }
 

@@ -6,6 +6,7 @@ import (
 	sdk "github.com/itsfunny/cell-chain/common/types"
 	"github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/components/config"
 	"github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/types"
+	"github.com/itsfunny/go-cell/base/core/eventbus"
 	"github.com/itsfunny/go-cell/base/core/promise"
 	"github.com/itsfunny/go-cell/base/core/services"
 	"github.com/itsfunny/go-cell/component/codec"
@@ -22,6 +23,7 @@ type BaseDiscoveryComponent struct {
 	internal    types.DiscoveryComponent
 
 	Config *config.DiscoveryConfiguration
+	Bus    eventbus.ICommonEventBus
 }
 
 func NewBaseDiscoveryComponent(
@@ -31,15 +33,22 @@ func NewBaseDiscoveryComponent(
 ) *BaseDiscoveryComponent {
 	ret := &BaseDiscoveryComponent{PeerManager: peerManager, internal: internal}
 	ret.BaseComponent = component.NewBaseComponent(enums.DiscoveryModule, internal, ddd, cdc)
+	ret.Bus.Subscribe(ret.GetContext())
 	return ret
 }
 
 func (b BaseDiscoveryComponent) OnStart(ctx *services.StartCTX) error {
 	go b.periodPing()
 	go b.periodBroadCastMembers()
+	go b.onRecv()
 	return nil
 }
 
+func (b BaseDiscoveryComponent) onRecv() {
+	for {
+		select {}
+	}
+}
 func (b BaseDiscoveryComponent) periodPing() {
 	timer := time.NewTimer(time.Second * time.Duration(b.Config.PingPeriod))
 	for {

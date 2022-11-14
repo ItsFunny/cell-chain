@@ -10,7 +10,13 @@ func CreatePingEnvelopeRequest(cdc types.Codec, fromPeerId PeerId, fromOutPutAdd
 	seq := utils.GenerateSequenceId()
 	req := NewPingRequest(fromPeerId, fromOutPutAddr)
 	data, _ := cdc.Marshal(req)
-	return types2.CreateNoopSignEnvelope(PingPong, seq, data)
+	return types2.CreateNoopSignEnvelope(Ping, seq, data)
+}
+
+func CreatePongEnvelopeResponse(cdc types.Codec, seq string, fromPeerId PeerId, fromOutPutAddr string) *types2.Envelope {
+	req := NewPongResponse(fromPeerId, fromOutPutAddr)
+	data, _ := cdc.Marshal(req)
+	return types2.CreateNoopSignEnvelope(Pong, seq, data)
 }
 
 func CreateMemberShareEnvelopeRequest(cdc types.Codec, fromPeerId PeerId, mems map[PeerId]IPeerNode) *types2.Envelope {

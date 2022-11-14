@@ -3,6 +3,7 @@ package types
 import (
 	"context"
 	"github.com/itsfunny/go-cell/base/reactor"
+	"gitlab.ebidsun.com/chain/droplib/plugin/pipeline"
 )
 
 type HandlerFlag int
@@ -21,6 +22,10 @@ func (c CellContext) GetGoCtx() context.Context {
 }
 
 func (c CellContext) FromHttpCtx(ctx reactor.IBuzzContext) CellContext {
+	return c
+}
+
+func (c CellContext) FromPipelineCtx(ctx *pipeline.Context) CellContext {
 	return c
 }
 

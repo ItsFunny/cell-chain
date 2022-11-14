@@ -7,6 +7,7 @@ type IPeerManager interface {
 	GetSelfNode() IPeerNode
 	Register(wrapper PeerWrapper)
 	Have(node PeerId) bool
+	GetByPeerId(id PeerId) IPeerNode
 }
 
 type IPeerNode interface {

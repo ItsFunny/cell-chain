@@ -23,3 +23,12 @@ func (m MembersShareRequest) String() string {
 func NewMembersShareRequest(fromPeerId PeerId, knownPeers map[PeerId]string) *MembersShareRequest {
 	return &MembersShareRequest{FromPeerId: fromPeerId, KnownPeers: knownPeers}
 }
+
+type PongResponse struct {
+	FromPeerId     PeerId
+	FromOutPutAddr string
+}
+
+func NewPongResponse(fromPeerId PeerId, fromOutPutAddr string) *PongResponse {
+	return &PongResponse{FromPeerId: fromPeerId, FromOutPutAddr: fromOutPutAddr}
+}

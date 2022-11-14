@@ -6,6 +6,7 @@ import (
 	"github.com/itsfunny/cell-chain/common/enums"
 	sdk "github.com/itsfunny/cell-chain/common/types"
 	"github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/types"
+	"github.com/itsfunny/go-cell/base/core/services"
 	"github.com/itsfunny/go-cell/component/codec"
 	"sync"
 )
@@ -22,12 +23,6 @@ type DefaultPeerManager struct {
 	self types.IPeerNode
 }
 
-func (d *DefaultPeerManager) Have(node types.PeerId) bool {
-	d.mutex.RLock()
-	defer d.mutex.RUnlock()
-	return d.members[node] != nil
-}
-
 func NewDefaultPeerManager(ddd *component.DDDComponent, cdc *codec.CodecComponent) *DefaultPeerManager {
 	ret := &DefaultPeerManager{
 		mutex:   sync.RWMutex{},
@@ -35,6 +30,18 @@ func NewDefaultPeerManager(ddd *component.DDDComponent, cdc *codec.CodecComponen
 	}
 	ret.BaseComponent = component.NewBaseComponent(enums.PeerManagerModule, ret, ddd, cdc)
 	return ret
+}
+
+func (d *DefaultPeerManager) Have(node types.PeerId) bool {
+	d.mutex.RLock()
+	defer d.mutex.RUnlock()
+	return d.members[node] != nil
+}
+
+func (d *DefaultPeerManager) GetByPeerId(id types.PeerId) types.IPeerNode {
+	d.mutex.RLock()
+	defer d.mutex.RUnlock()
+	return d.members[id]
 }
 
 func (d *DefaultPeerManager) Register(wrapper types.PeerWrapper) {
@@ -54,6 +61,11 @@ func (d *DefaultPeerManager) GetMembership() map[types.PeerId]types.IPeerNode {
 	defer d.mutex.RUnlock()
 
 	return d.members
+}
+
+func (d *DefaultPeerManager) OnStart(ctx *services.StartCTX) error {
+
+	return nil
 }
 
 // TODO, copy?

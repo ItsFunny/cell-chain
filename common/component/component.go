@@ -17,6 +17,8 @@ type CellMsgFn func() sdk.CellRequest
 
 type CellComponent interface {
 	services.IBaseService
+	// TODO
+	//Handlers() []EnvelopeHandler
 }
 
 type BaseComponent struct {
