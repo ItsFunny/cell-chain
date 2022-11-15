@@ -10,4 +10,5 @@ var (
 
 	PingPongHandler    = logsdk.NewModule("ping_pong", 5)
 	MemberShareHandler = logsdk.NewModule("member_share", 6)
+	ProbeHandler       = logsdk.NewModule("probe", 7)
 )

@@ -19,7 +19,7 @@ func (d *DefaultPeerNode) MetaData() types.PeerMetaData {
 	return d.metaData
 }
 
-func (d *DefaultPeerNode) From(wp types.PeerWrapper) {
+func (d *DefaultPeerNode) From(wp *types.PeerWrapper) {
 	d.peerId = wp.PeerId
 	d.metaData = wp.MetaData
 }

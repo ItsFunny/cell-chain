@@ -44,7 +44,7 @@ func (d *DefaultPeerManager) GetByPeerId(id types.PeerId) types.IPeerNode {
 	return d.members[id]
 }
 
-func (d *DefaultPeerManager) Register(wrapper types.PeerWrapper) {
+func (d *DefaultPeerManager) Register(wrapper *types.PeerWrapper) {
 	d.mutex.Lock()
 	defer d.mutex.Unlock()
 	node := &DefaultPeerNode{}

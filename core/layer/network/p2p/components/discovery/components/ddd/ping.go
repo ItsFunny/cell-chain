@@ -40,16 +40,16 @@ func (p *PingHandler) Handler(ctx *pipeline.Context, env *types2.Envelope) error
 	from := req.FromPeerId
 	logrusplugin.MInfo(enums.PingPongHandler, "receive message",
 		"from", from, "fromOutPutAddr", req.FromOutPutAddr)
+	selfNode := p.peerManager.GetSelfNode()
 	// TODO optimize:producer and consumer
 	if p.peerManager.Have(from) {
 		// send response
-		selfNode := p.peerManager.GetSelfNode()
 		remote := p.peerManager.GetByPeerId(from)
 		resp := types.CreatePongEnvelopeResponse(p.cdc.GetCodec(), env.Header.SequenceId, selfNode.PeerId(), selfNode.MetaData().GetOutPutAddress())
 		types.PublishDiscoverySendMessageEvent(p.bus, types.NewSendToPeerRequest(remote.MetaData().GetOutPutAddress(), resp))
 	} else {
 		// probe
-		probeReq := types.CreateProbeEnvelopRequest(p.cdc.GetCodec(), env.Header.SequenceId, from.ToString())
+		probeReq := types.CreateProbeEnvelopRequest(p.cdc.GetCodec(), env.Header.SequenceId, types.NewProbeRequest(selfNode.PeerId(), selfNode.MetaData()))
 		types.PublishDiscoverySendMessageEvent(p.bus, types.NewSendToPeerRequest(from.ToString(), probeReq))
 	}
 

@@ -34,9 +34,19 @@ func NewPongResponse(fromPeerId PeerId, fromOutPutAddr string) *PongResponse {
 }
 
 type ProbeRequest struct {
-	ProbeAddress string
+	PeerId       PeerId
+	SelfMetaData PeerMetaData
 }
 
-func NewProbeRequest(probeAddress string) *ProbeRequest {
-	return &ProbeRequest{ProbeAddress: probeAddress}
+func NewProbeRequest(peerId PeerId, selfMetaData PeerMetaData) *ProbeRequest {
+	return &ProbeRequest{PeerId: peerId, SelfMetaData: selfMetaData}
+}
+
+type ProbeResponse struct {
+	SelfPeerId PeerId
+	MetaData   PeerMetaData
+}
+
+func NewProbeResponse(selfPeerId PeerId, metaData PeerMetaData) *ProbeResponse {
+	return &ProbeResponse{SelfPeerId: selfPeerId, MetaData: metaData}
 }

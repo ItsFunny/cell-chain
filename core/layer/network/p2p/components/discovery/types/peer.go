@@ -5,7 +5,7 @@ type PeerId string
 type IPeerManager interface {
 	GetMembership() map[PeerId]IPeerNode
 	GetSelfNode() IPeerNode
-	Register(wrapper PeerWrapper)
+	Register(wrapper *PeerWrapper)
 	Have(node PeerId) bool
 	GetByPeerId(id PeerId) IPeerNode
 }
@@ -18,6 +18,10 @@ type IPeerNode interface {
 type PeerWrapper struct {
 	PeerId   PeerId
 	MetaData PeerMetaData
+}
+
+func NewPeerWrapper(peerId PeerId, metaData PeerMetaData) *PeerWrapper {
+	return &PeerWrapper{PeerId: peerId, MetaData: metaData}
 }
 
 func (p PeerId) ToString() string {
