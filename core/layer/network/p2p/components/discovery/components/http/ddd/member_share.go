@@ -31,6 +31,9 @@ func (m *MemberShareHandler) Handler(ctx *pipeline.Context, env *types2.Envelope
 		return err
 	}
 
+	seq := env.Header.SequenceId
+
+	selfNode := m.peerManager.GetSelfNode()
 	remoteKnownPeers := req.KnownPeers
 	knwonPeers := m.peerManager.GetMembership()
 	logrusplugin.MInfo(enums.MemberShareHandler, "receive memshare message",
@@ -59,12 +62,24 @@ func (m *MemberShareHandler) Handler(ctx *pipeline.Context, env *types2.Envelope
 	}
 	if len(unknownPeers) > 0 {
 		// probe
+		for _, v := range unknownPeers {
+			proReq := types.NewProbeRequest(selfNode.PeerId(), selfNode.MetaData())
+			types.PublishDiscoverySendMessageEvent(m.bus,
+				types.NewSendToPeerRequest(v,
+					types.CreateProbeEnvelopRequest(m.cdc.GetCodec(), seq, proReq)))
+		}
 	}
 
 	if len(remoteUnknownPeers) > 0 {
 		// help the remote node sync members
-
+		for _, v := range remoteUnknownPeers {
+			newMember := types.NewNewMemberRequest(v)
+			types.PublishDiscoverySendMessageEvent(m.bus,
+				types.NewSendToPeerRequest(v,
+					types.CreateNewMemberEnvelopeRequest(m.cdc.GetCodec(), seq, newMember)))
+		}
 	}
+
 	return nil
 }
 

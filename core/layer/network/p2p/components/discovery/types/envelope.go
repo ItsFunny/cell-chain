@@ -39,3 +39,8 @@ func CreateProbeEnvelopResponse(cdc types.Codec, seq string, resp *ProbeResponse
 	data, _ := cdc.Marshal(resp)
 	return types2.CreateNoopSignEnvelope(APIProbeResponse, seq, data)
 }
+
+func CreateNewMemberEnvelopeRequest(cdc types.Codec, seq string, req *NewMemberRequest) *types2.Envelope {
+	data, _ := cdc.Marshal(req)
+	return types2.CreateNoopSignEnvelope(APINewMember, seq, data)
+}

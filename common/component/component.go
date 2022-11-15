@@ -28,7 +28,10 @@ type BaseComponent struct {
 	cdc *codec.CodecComponent
 }
 
-func NewBaseComponent(m logsdk.Module, impl CellComponent, ddd *DDDComponent, cdc *codec.CodecComponent) *BaseComponent {
+func NewBaseComponent(m logsdk.Module,
+	impl CellComponent,
+	ddd *DDDComponent,
+	cdc *codec.CodecComponent) *BaseComponent {
 	ret := &BaseComponent{}
 	ret.BaseService = services.NewBaseService(nil, m, impl)
 	ret.ddd = ddd

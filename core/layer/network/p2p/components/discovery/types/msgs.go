@@ -50,3 +50,11 @@ type ProbeResponse struct {
 func NewProbeResponse(selfPeerId PeerId, metaData PeerMetaData) *ProbeResponse {
 	return &ProbeResponse{SelfPeerId: selfPeerId, MetaData: metaData}
 }
+
+type NewMemberRequest struct {
+	PeerOutPutAddress string
+}
+
+func NewNewMemberRequest(peerOutPutAddress string) *NewMemberRequest {
+	return &NewMemberRequest{PeerOutPutAddress: peerOutPutAddress}
+}

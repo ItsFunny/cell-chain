@@ -7,4 +7,5 @@ const (
 	MembersShare     = "/api/v1/memberShare"
 	Probe            = "/api/v1/probe"
 	APIProbeResponse = "/api/v1/probe/response"
+	APINewMember     = "/api/v1/newMember"
 )
