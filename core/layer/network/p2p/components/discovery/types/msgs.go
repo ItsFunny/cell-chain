@@ -32,3 +32,11 @@ type PongResponse struct {
 func NewPongResponse(fromPeerId PeerId, fromOutPutAddr string) *PongResponse {
 	return &PongResponse{FromPeerId: fromPeerId, FromOutPutAddr: fromOutPutAddr}
 }
+
+type ProbeRequest struct {
+	ProbeAddress string
+}
+
+func NewProbeRequest(probeAddress string) *ProbeRequest {
+	return &ProbeRequest{ProbeAddress: probeAddress}
+}

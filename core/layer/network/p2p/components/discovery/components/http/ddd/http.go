@@ -28,7 +28,7 @@ func (h HttpSendPeerDDDHandler) Handler(ctx *pipeline.Context) (types.CellRespon
 	msg := req.Envelop
 	to := req.To
 	p2pReq := types3.NewPeer2PeerRequest(msg)
-	err := Send(p2pReq, h.cdcComponent, to.MetaData().GetOutPutAddress())
+	err := Send(p2pReq, h.cdcComponent, to)
 
 	return nil, types.HandlerFlagNotify, err
 }

@@ -6,7 +6,7 @@ import (
 )
 
 type HttpSendToPeerRequest struct {
-	To      types.IPeerNode
+	To      string
 	Envelop *types2.Envelope
 }
 

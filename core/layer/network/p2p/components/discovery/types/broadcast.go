@@ -10,8 +10,13 @@ type BroadCastResponse struct {
 }
 
 type SendToPeerRequest struct {
-	To      IPeerNode
+	To      string
 	Envelop *types.Envelope
 }
+
+func NewSendToPeerRequest(to string, envelop *types.Envelope) *SendToPeerRequest {
+	return &SendToPeerRequest{To: to, Envelop: envelop}
+}
+
 type SendToPeerResponse struct {
 }

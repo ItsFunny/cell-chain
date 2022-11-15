@@ -1,6 +1,7 @@
 package types
 
 import (
+	"context"
 	"github.com/itsfunny/go-cell/base/core/eventbus"
 )
 
@@ -9,6 +10,8 @@ var (
 	DiscoveryEvent        = "discovery"
 )
 
-func PublishSendMessageEvent(bus eventbus.ICommonEventBus, protocol string, detailMsg interface{}) {
-
+func PublishDiscoverySendMessageEvent(bus eventbus.ICommonEventBus, detailMsg interface{}) {
+	bus.PublishWithEvents(context.Background(), detailMsg, map[string][]string{
+		DiscoveryEventTypeKey: {DiscoveryEvent},
+	})
 }

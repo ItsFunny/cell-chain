@@ -29,3 +29,9 @@ func CreateMemberShareEnvelopeRequest(cdc types.Codec, fromPeerId PeerId, mems m
 	data, _ := cdc.Marshal(req)
 	return types2.CreateNoopSignEnvelope(MembersShare, seq, data)
 }
+
+func CreateProbeEnvelopRequest(cdc types.Codec, seq string, probeId string) *types2.Envelope {
+	req := NewProbeRequest(probeId)
+	data, _ := cdc.Marshal(req)
+	return types2.CreateNoopSignEnvelope(Probe, seq, data)
+}

@@ -24,6 +24,7 @@ type BaseDiscoveryComponent struct {
 
 	Config *config.DiscoveryConfiguration
 	Bus    eventbus.ICommonEventBus
+	sub    eventbus.Subscription
 }
 
 func NewBaseDiscoveryComponent(
@@ -33,7 +34,11 @@ func NewBaseDiscoveryComponent(
 ) *BaseDiscoveryComponent {
 	ret := &BaseDiscoveryComponent{PeerManager: peerManager, internal: internal}
 	ret.BaseComponent = component.NewBaseComponent(enums.DiscoveryModule, internal, ddd, cdc)
-	ret.Bus.Subscribe(ret.GetContext())
+	subscribe, err := ret.Bus.Subscribe(ret.GetContext(), "discovery", eventbus.QueryForEvent(types.DiscoveryEventTypeKey, types.DiscoveryEvent), 10)
+	if nil != err {
+		panic(err)
+	}
+	ret.sub = subscribe
 	return ret
 }
 
@@ -45,9 +50,26 @@ func (b BaseDiscoveryComponent) OnStart(ctx *services.StartCTX) error {
 }
 
 func (b BaseDiscoveryComponent) onRecv() {
+	ch := b.sub.Out()
 	for {
-		select {}
+		select {
+		case msg := <-ch:
+			if err := b.handleMsg(msg); nil != err {
+				b.Logger.Error("handle failed", "err", err)
+			}
+		case <-b.sub.Canceled():
+			return
+		}
 	}
+}
+func (b BaseDiscoveryComponent) handleMsg(msg interface{}) error {
+	switch v := msg.(type) {
+	case *types.SendToPeerRequest:
+		b.SendToPeerAsync(sdk.EmptyCellContext(b.GetContext()), *v)
+	default:
+		b.Logger.Warn("未知的msg", "msg", msg)
+	}
+	return nil
 }
 func (b BaseDiscoveryComponent) periodPing() {
 	timer := time.NewTimer(time.Second * time.Duration(b.Config.PingPeriod))
@@ -105,7 +127,7 @@ func (b BaseDiscoveryComponent) BroadCast(ctx sdk.CellContext, req types.BroadCa
 	promises := make([]*promise.Promise, 0)
 	for id, mem := range mems {
 		p, err := b.SendToPeerAsync(ctx, types.SendToPeerRequest{
-			To:      mem,
+			To:      mem.MetaData().GetOutPutAddress(),
 			Envelop: req.Envelop,
 		})
 		if nil != err {

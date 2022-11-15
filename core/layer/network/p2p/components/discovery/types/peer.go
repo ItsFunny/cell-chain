@@ -19,3 +19,7 @@ type PeerWrapper struct {
 	PeerId   PeerId
 	MetaData PeerMetaData
 }
+
+func (p PeerId) ToString() string {
+	return string(p)
+}
