@@ -8,6 +8,7 @@ type IPeerManager interface {
 	Register(wrapper *PeerWrapper)
 	Have(node PeerId) bool
 	GetByPeerId(id PeerId) IPeerNode
+	ForwardMessage() chan<- interface{}
 }
 
 type IPeerNode interface {

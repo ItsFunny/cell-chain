@@ -21,6 +21,8 @@ type DefaultPeerManager struct {
 	members map[types.PeerId]types.IPeerNode
 
 	self types.IPeerNode
+
+	forwardMessageChan chan interface{}
 }
 
 func NewDefaultPeerManager(ddd *component.DDDComponent, cdc *codec.CodecComponent) *DefaultPeerManager {
@@ -29,6 +31,8 @@ func NewDefaultPeerManager(ddd *component.DDDComponent, cdc *codec.CodecComponen
 		members: make(map[types.PeerId]types.IPeerNode),
 	}
 	ret.BaseComponent = component.NewBaseComponent(enums.PeerManagerModule, ret, ddd, cdc)
+	// TODO, configurable
+	ret.forwardMessageChan = make(chan interface{}, 100)
 	return ret
 }
 
@@ -56,6 +60,10 @@ func (d *DefaultPeerManager) Register(wrapper *types.PeerWrapper) {
 	})
 }
 
+func (d *DefaultPeerManager) ForwardMessage() chan<- interface{} {
+	return d.forwardMessageChan
+}
+
 func (d *DefaultPeerManager) GetMembership() map[types.PeerId]types.IPeerNode {
 	d.mutex.RLock()
 	defer d.mutex.RUnlock()
@@ -64,8 +72,19 @@ func (d *DefaultPeerManager) GetMembership() map[types.PeerId]types.IPeerNode {
 }
 
 func (d *DefaultPeerManager) OnStart(ctx *services.StartCTX) error {
-
+	go d.routine()
 	return nil
+}
+func (d *DefaultPeerManager) routine() {
+	for {
+		select {
+		case msg := <-d.forwardMessageChan:
+			d.handleMsg(msg)
+		}
+	}
+}
+func (d *DefaultPeerManager) handleMsg(msg interface{}) {
+	d.Logger.Info("receive msg", "info", msg)
 }
 
 // TODO, copy?

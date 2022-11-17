@@ -3,7 +3,7 @@ package types
 import (
 	"context"
 	"github.com/itsfunny/go-cell/base/reactor"
-	"gitlab.ebidsun.com/chain/droplib/plugin/pipeline"
+	"github.com/itsfunny/go-cell/sdk/pipeline"
 )
 
 type HandlerFlag int
