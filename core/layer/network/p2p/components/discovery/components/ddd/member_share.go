@@ -21,6 +21,10 @@ type MemberShareHandler struct {
 	peerManager types.IPeerManager
 }
 
+func NewMemberShareHandler(cdc *codec.CodecComponent, bus eventbus.ICommonEventBus, peerManager types.IPeerManager) component.EnvelopeHandler {
+	return &MemberShareHandler{cdc: cdc, bus: bus, peerManager: peerManager}
+}
+
 func (m *MemberShareHandler) Handler(ctx *pipeline.Context, env *types2.Envelope) error {
 	data := env.Payload.Data
 	if len(data) == 0 {

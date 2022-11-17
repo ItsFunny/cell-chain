@@ -19,6 +19,10 @@ type NewMemberHandler struct {
 	bus         eventbus.ICommonEventBus
 }
 
+func NewNewMemberHandler(cdc *codec.CodecComponent, peerManager types.IPeerManager, bus eventbus.ICommonEventBus) component.EnvelopeHandler {
+	return &NewMemberHandler{cdc: cdc, peerManager: peerManager, bus: bus}
+}
+
 func (n *NewMemberHandler) Handler(ctx *pipeline.Context, env *types2.Envelope) error {
 	data := env.Payload.Data
 	var req types.NewMemberRequest

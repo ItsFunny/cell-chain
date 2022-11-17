@@ -21,6 +21,10 @@ type ProbeEnvelopeHandler struct {
 	bus         eventbus.ICommonEventBus
 }
 
+func NewProbeEnvelopeHandler(cdc *codec.CodecComponent, peerManager types.IPeerManager, bus eventbus.ICommonEventBus) component.EnvelopeHandler {
+	return &ProbeEnvelopeHandler{cdc: cdc, peerManager: peerManager, bus: bus}
+}
+
 func (p *ProbeEnvelopeHandler) Handler(ctx *pipeline.Context, env *types2.Envelope) error {
 	data := env.Payload.Data
 	var probeReq types.ProbeRequest

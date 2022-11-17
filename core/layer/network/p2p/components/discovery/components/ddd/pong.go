@@ -17,6 +17,10 @@ type PongHandler struct {
 	peerManager types.IPeerManager
 }
 
+func NewPongHandler(cdc *codec.CodecComponent, peerManager types.IPeerManager) component.EnvelopeHandler {
+	return &PongHandler{cdc: cdc, peerManager: peerManager}
+}
+
 func (p *PongHandler) Handler(ctx *pipeline.Context, env *types2.Envelope) error {
 	data := env.Payload.Data
 	var resp types.PongResponse

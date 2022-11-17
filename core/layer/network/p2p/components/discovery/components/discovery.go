@@ -39,6 +39,8 @@ func NewBaseDiscoveryComponent(
 		panic(err)
 	}
 	ret.sub = subscribe
+	// TODO, configurable
+	ret.Config = config.DefaultDiscoveryConfiguration()
 	return ret
 }
 

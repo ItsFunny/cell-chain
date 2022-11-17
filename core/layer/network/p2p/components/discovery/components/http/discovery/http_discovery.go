@@ -25,7 +25,7 @@ type HttpDiscoveryComponent struct {
 
 func NewHttpDiscoveryComponent(ddd *component.DDDComponent, cdc *codec.CodecComponent,
 	peerManager types.IPeerManager,
-) *HttpDiscoveryComponent {
+) types.DiscoveryComponent {
 	ret := &HttpDiscoveryComponent{}
 	ret.BaseDiscoveryComponent = components.NewBaseDiscoveryComponent(ddd, cdc, peerManager, ret)
 	return ret

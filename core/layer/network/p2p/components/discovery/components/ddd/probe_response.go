@@ -17,6 +17,10 @@ type ProbeSyncHandler struct {
 	peerManager types.IPeerManager
 }
 
+func NewProbeSyncHandler(cdc *codec.CodecComponent, peerManager types.IPeerManager) component.EnvelopeHandler {
+	return &ProbeSyncHandler{cdc: cdc, peerManager: peerManager}
+}
+
 func (p *ProbeSyncHandler) Handler(ctx *pipeline.Context, env *types2.Envelope) error {
 	data := env.Payload.Data
 	var resp types.ProbeResponse

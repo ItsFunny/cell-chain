@@ -23,7 +23,7 @@ type PingHandler struct {
 }
 
 func NewPingHandler(ddd *component.DDDComponent, cdc *codec.CodecComponent,
-	peerManager types.IPeerManager, bus eventbus.ICommonEventBus, discovery types.DiscoveryComponent) *PingHandler {
+	peerManager types.IPeerManager, bus eventbus.ICommonEventBus, discovery types.DiscoveryComponent) component.EnvelopeHandler {
 	ret := &PingHandler{ddd: ddd, cdc: cdc, peerManager: peerManager, bus: bus}
 	return ret
 }
