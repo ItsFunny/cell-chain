@@ -25,12 +25,12 @@ type DefaultPeerManager struct {
 	forwardMessageChan chan interface{}
 }
 
-func NewDefaultPeerManager(ddd *component.DDDComponent, cdc *codec.CodecComponent) types.IPeerManager {
+func NewDefaultPeerManager(ctx context.Context, ddd *component.DDDComponent, cdc *codec.CodecComponent) types.IPeerManager {
 	ret := &DefaultPeerManager{
 		mutex:   sync.RWMutex{},
 		members: make(map[types.PeerId]types.IPeerNode),
 	}
-	ret.BaseComponent = component.NewBaseComponent(enums.PeerManagerModule, ret, ddd, cdc)
+	ret.BaseComponent = component.NewBaseComponent(ctx, enums.PeerManagerModule, ret, ddd, cdc)
 	// TODO, configurable
 	ret.forwardMessageChan = make(chan interface{}, 100)
 	return ret

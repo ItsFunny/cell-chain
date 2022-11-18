@@ -1,6 +1,7 @@
 package component
 
 import (
+	"context"
 	"github.com/itsfunny/cell-chain/common/enums"
 	"github.com/itsfunny/cell-chain/common/types"
 	"github.com/itsfunny/go-cell/base/core/promise"
@@ -27,9 +28,9 @@ type DDDComponent struct {
 	routine routine.IRoutineComponent
 }
 
-func NewDDDComponent(routine routine.IRoutineComponent) *DDDComponent {
+func NewDDDComponent(ctx context.Context, routine routine.IRoutineComponent) *DDDComponent {
 	ret := &DDDComponent{}
-	ret.BaseService = services.NewBaseService(nil, enums.DDDModule, ret)
+	ret.BaseService = services.NewBaseService(ctx, nil, enums.DDDModule, ret)
 	ret.pip = pipeline.New()
 	ret.routine = routine
 	return ret

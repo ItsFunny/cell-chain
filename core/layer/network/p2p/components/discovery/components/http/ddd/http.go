@@ -19,7 +19,7 @@ type HttpSendPeerDDDHandler struct {
 	cdcComponent *codec.CodecComponent
 }
 
-func NewHttpSendPeerDDDHandler(cdcComponent *codec.CodecComponent) *HttpSendPeerDDDHandler {
+func NewHttpSendPeerDDDHandler(cdcComponent *codec.CodecComponent) component.DDDHandler {
 	return &HttpSendPeerDDDHandler{cdcComponent: cdcComponent}
 }
 

@@ -17,10 +17,12 @@ type MsgDispatcher struct {
 	handlers map[string]component.EnvelopeHandler
 }
 
-// TODO, use fx#invoke
-func NewMsgDispatcher() *MsgDispatcher {
+func NewMsgDispatcher(envHolder component.EnvelopeHandlerHolder) component.DDDHandler {
 	ret := &MsgDispatcher{
 		handlers: make(map[string]component.EnvelopeHandler),
+	}
+	for _, v := range envHolder.Envelopes {
+		ret.handlers[v.Protocol()] = v
 	}
 	return ret
 }

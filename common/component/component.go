@@ -1,6 +1,7 @@
 package component
 
 import (
+	"context"
 	sdk "github.com/itsfunny/cell-chain/common/types"
 	"github.com/itsfunny/go-cell/base/core/promise"
 	"github.com/itsfunny/go-cell/base/core/services"
@@ -28,12 +29,12 @@ type BaseComponent struct {
 	cdc *codec.CodecComponent
 }
 
-func NewBaseComponent(m logsdk.Module,
+func NewBaseComponent(ctx context.Context, m logsdk.Module,
 	impl CellComponent,
 	ddd *DDDComponent,
 	cdc *codec.CodecComponent) *BaseComponent {
 	ret := &BaseComponent{}
-	ret.BaseService = services.NewBaseService(nil, m, impl)
+	ret.BaseService = services.NewBaseService(ctx, nil, m, impl)
 	ret.ddd = ddd
 	ret.cdc = cdc
 	return ret

@@ -1,11 +1,13 @@
 package discovery
 
 import (
+	"context"
 	"github.com/itsfunny/cell-chain/common/component"
 	sdk "github.com/itsfunny/cell-chain/common/types"
 	"github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/components"
 	types2 "github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/components/http/types"
 	"github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/types"
+	"github.com/itsfunny/go-cell/base/core/eventbus"
 	"github.com/itsfunny/go-cell/base/core/promise"
 	"github.com/itsfunny/go-cell/component/codec"
 )
@@ -23,11 +25,13 @@ type HttpDiscoveryComponent struct {
 //	return
 //}
 
-func NewHttpDiscoveryComponent(ddd *component.DDDComponent, cdc *codec.CodecComponent,
+func NewHttpDiscoveryComponent(ctx context.Context,
+	ddd *component.DDDComponent, cdc *codec.CodecComponent,
 	peerManager types.IPeerManager,
+	bus eventbus.ICommonEventBus,
 ) types.DiscoveryComponent {
 	ret := &HttpDiscoveryComponent{}
-	ret.BaseDiscoveryComponent = components.NewBaseDiscoveryComponent(ddd, cdc, peerManager, ret)
+	ret.BaseDiscoveryComponent = components.NewBaseDiscoveryComponent(ctx, ddd, cdc, peerManager, bus, ret)
 	return ret
 }
 

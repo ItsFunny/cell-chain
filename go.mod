@@ -2,11 +2,19 @@ module github.com/itsfunny/cell-chain
 
 go 1.18
 
-require github.com/itsfunny/go-cell v0.0.0
+require (
+	github.com/itsfunny/go-cell v0.0.0
+	github.com/stretchr/testify v1.7.1
+	go.uber.org/fx v1.16.0
+)
 
 require (
+	github.com/ChengjinWu/gojson v0.0.0-20181113073026-04749cc2d015 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/emirpasic/gods v1.12.0 // indirect
+	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/fxamacker/cbor/v2 v2.4.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
@@ -19,15 +27,14 @@ require (
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
-	github.com/stretchr/testify v1.7.1 // indirect
 	github.com/tidwall/gjson v1.12.1 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	go.uber.org/atomic v1.6.0 // indirect
 	go.uber.org/dig v1.12.0 // indirect
-	go.uber.org/fx v1.16.0 // indirect
 	go.uber.org/multierr v1.5.0 // indirect
 	go.uber.org/zap v1.16.0 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect

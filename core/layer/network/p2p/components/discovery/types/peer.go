@@ -1,8 +1,11 @@
 package types
 
+import "github.com/itsfunny/cell-chain/common/component"
+
 type PeerId string
 
 type IPeerManager interface {
+	component.CellComponent
 	GetMembership() map[PeerId]IPeerNode
 	GetSelfNode() IPeerNode
 	Register(wrapper *PeerWrapper)

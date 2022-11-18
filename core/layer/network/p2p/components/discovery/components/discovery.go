@@ -1,6 +1,7 @@
 package components
 
 import (
+	"context"
 	"github.com/itsfunny/cell-chain/common/component"
 	"github.com/itsfunny/cell-chain/common/enums"
 	sdk "github.com/itsfunny/cell-chain/common/types"
@@ -28,12 +29,14 @@ type BaseDiscoveryComponent struct {
 }
 
 func NewBaseDiscoveryComponent(
+	ctx context.Context,
 	ddd *component.DDDComponent, cdc *codec.CodecComponent,
 	peerManager types.IPeerManager,
+	Bus eventbus.ICommonEventBus,
 	internal types.DiscoveryComponent,
 ) *BaseDiscoveryComponent {
-	ret := &BaseDiscoveryComponent{PeerManager: peerManager, internal: internal}
-	ret.BaseComponent = component.NewBaseComponent(enums.DiscoveryModule, internal, ddd, cdc)
+	ret := &BaseDiscoveryComponent{PeerManager: peerManager, internal: internal, Bus: Bus}
+	ret.BaseComponent = component.NewBaseComponent(ctx, enums.DiscoveryModule, internal, ddd, cdc)
 	subscribe, err := ret.Bus.Subscribe(ret.GetContext(), "discovery", eventbus.QueryForEvent(types.DiscoveryEventTypeKey, types.DiscoveryEvent), 10)
 	if nil != err {
 		panic(err)
