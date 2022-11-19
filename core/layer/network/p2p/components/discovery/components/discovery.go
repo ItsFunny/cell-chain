@@ -146,3 +146,7 @@ func (b BaseDiscoveryComponent) BroadCast(ctx sdk.CellContext, req types.BroadCa
 
 	return ret
 }
+
+func (b BaseDiscoveryComponent) GetPeerManager() types.IPeerManager {
+	return b.PeerManager
+}

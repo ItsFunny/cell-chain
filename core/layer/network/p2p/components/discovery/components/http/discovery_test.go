@@ -32,7 +32,7 @@ func (suite *HttpDiscoveryTestSuit) SetupTest() {
 	wg := sync.WaitGroup{}
 	wg.Add(count)
 	// TODO, 需要修改go-cell#sdk#configuration
-	cellHome := "/Users/lvcong/go/src/github.com/itsfunny/cell-chain/testdata/config  "
+	cellHome := "/Users/lvcong/go/src/github.com/itsfunny/cell-chain/testdata/config"
 	configType := "test%d"
 	for i := 0; i < count; i++ {
 		app := application.New(context.Background(), modules()...)

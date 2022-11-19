@@ -14,7 +14,8 @@
   "configs": [
     {
       "modules": {
-        "http": "public/http.json"
+        "http": "public/http.json",
+        "httpDiscovery": "public/httpDiscovery.json"
       },
       "schema": null
     }

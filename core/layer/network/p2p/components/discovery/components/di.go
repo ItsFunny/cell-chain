@@ -15,23 +15,28 @@ var (
 		return fx.Options(
 			ddd.DiscoveryEnvelopeHandlerModule,
 			peermanager.DefaultPeerManagerModule,
-			di.RegisterExtension(NewDiscoveryExtension),
 		)
 	}
 )
 
-type DiscoveryExtension struct {
+type BaseDiscoveryExtension struct {
 	*extension.BaseExtension
-	d types.DiscoveryComponent
+	D        types.DiscoveryComponent
+	concrete extension.INodeExtension
 }
 
-func NewDiscoveryExtension(d types.DiscoveryComponent) extension.INodeExtension {
-	ret := &DiscoveryExtension{}
+func NewBaseDiscoveryExtension(d types.DiscoveryComponent, ext extension.INodeExtension) *BaseDiscoveryExtension {
+	ret := &BaseDiscoveryExtension{}
 	ret.BaseExtension = extension.NewBaseExtension(ret)
-	ret.d = d
+	ret.D = d
+	ret.concrete = ext
 	return ret
 }
 
-func (d *DiscoveryExtension) OnExtensionStart(ctx extension.INodeContext) error {
-	return d.d.BStart(services.AsyncStartOpt)
+func (d *BaseDiscoveryExtension) OnExtensionInit(ctx extension.INodeContext) error {
+	return d.concrete.OnExtensionInit(ctx)
+}
+
+func (d *BaseDiscoveryExtension) OnExtensionStart(ctx extension.INodeContext) error {
+	return d.D.BStart(services.AsyncStartOpt)
 }

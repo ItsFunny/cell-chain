@@ -11,6 +11,10 @@ type DefaultPeerNode struct {
 	metaData types.PeerMetaData
 }
 
+func NewDefaultPeerNode(peerId types.PeerId, metaData types.PeerMetaData) *DefaultPeerNode {
+	return &DefaultPeerNode{peerId: peerId, metaData: metaData}
+}
+
 func (d *DefaultPeerNode) PeerId() types.PeerId {
 	return d.peerId
 }

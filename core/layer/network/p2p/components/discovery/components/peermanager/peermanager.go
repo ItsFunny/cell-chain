@@ -23,6 +23,8 @@ type DefaultPeerManager struct {
 	self types.IPeerNode
 
 	forwardMessageChan chan interface{}
+
+	seal bool
 }
 
 func NewDefaultPeerManager(ctx context.Context, ddd *component.DDDComponent, cdc *codec.CodecComponent) types.IPeerManager {
@@ -34,6 +36,19 @@ func NewDefaultPeerManager(ctx context.Context, ddd *component.DDDComponent, cdc
 	// TODO, configurable
 	ret.forwardMessageChan = make(chan interface{}, 100)
 	return ret
+}
+func (d *DefaultPeerManager) Seal() {
+	d.seal = true
+}
+func (d *DefaultPeerManager) Sealed() bool {
+	return d.seal
+}
+
+func (d *DefaultPeerManager) SetupSelfNode(n types.IPeerNode) {
+	if d.Sealed() {
+		panic("asd")
+	}
+	d.self = n
 }
 
 func (d *DefaultPeerManager) Have(node types.PeerId) bool {

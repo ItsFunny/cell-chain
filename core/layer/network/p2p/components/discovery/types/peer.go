@@ -1,6 +1,8 @@
 package types
 
-import "github.com/itsfunny/cell-chain/common/component"
+import (
+	"github.com/itsfunny/cell-chain/common/component"
+)
 
 type PeerId string
 
@@ -12,6 +14,11 @@ type IPeerManager interface {
 	Have(node PeerId) bool
 	GetByPeerId(id PeerId) IPeerNode
 	ForwardMessage() chan<- interface{}
+
+	SetupSelfNode(n IPeerNode)
+
+	Seal()
+	Sealed() bool
 }
 
 type IPeerNode interface {
