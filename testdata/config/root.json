@@ -1,0 +1,24 @@
+{
+  "types": {
+    "test1": {
+      "parent": "test0"
+    },
+    "test0": {
+      "parent": "Default"
+    },
+    "Default": {
+      "parent": null
+    }
+  },
+  "defaultType": "Default",
+  "configs": [
+    {
+      "modules": {
+        "http": "public/http.json"
+      },
+      "schema": null
+    }
+  ],
+  "plugins": {
+  }
+}

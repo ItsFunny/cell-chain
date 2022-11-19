@@ -9,7 +9,6 @@ import (
 	"github.com/itsfunny/go-cell/base/node/core/extension"
 	"github.com/itsfunny/go-cell/di"
 	"github.com/stretchr/testify/suite"
-	"os"
 	"strconv"
 	"sync"
 	"testing"
@@ -32,11 +31,16 @@ func (suite *HttpDiscoveryTestSuit) SetupTest() {
 	count := 1
 	wg := sync.WaitGroup{}
 	wg.Add(count)
+	// TODO, 需要修改go-cell#sdk#configuration
+	cellHome := "/Users/lvcong/go/src/github.com/itsfunny/cell-chain/testdata/config  "
+	configType := "test%d"
 	for i := 0; i < count; i++ {
 		app := application.New(context.Background(), modules()...)
-		go func() {
-			app.Run(os.Args)
-		}()
+		go func(index int) {
+			testType := fmt.Sprintf(configType, index)
+			args := []string{fmt.Sprintf("-cellHome=%s ", cellHome), fmt.Sprintf("-configType=%s", testType)}
+			app.Run(args)
+		}(i)
 		bus := app.GetApplicationBus()
 		notify, err := bus.SubscribeApplicationEvent(context.Background(), strconv.Itoa(i))
 		if nil != err {
@@ -54,7 +58,6 @@ func (suite *HttpDiscoveryTestSuit) SetupTest() {
 				}
 			}
 		}()
-
 	}
 	wg.Wait()
 	fmt.Println("setup successfully")

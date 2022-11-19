@@ -15,7 +15,7 @@ func NewDDDExtension(ddd *DDDComponent, holder DDDHandlerHolder) extension.INode
 	ret.ddd = ddd
 	return ret
 }
-func (dd *DDDExtension) OnExtensionStart(ctx extension.INodeContext) error {
+func (dd *DDDExtension) OnExtensionInit(ctx extension.INodeContext) error {
 	for _, v := range dd.Handlers {
 		dd.ddd.RegisterDDDHandler(v)
 	}
