@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/itsfunny/cell-chain/common/component"
 	"github.com/itsfunny/cell-chain/common/enums"
-	sdk "github.com/itsfunny/cell-chain/common/types"
 	"github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/types"
+	"github.com/itsfunny/go-cell/base/core/eventbus"
 	"github.com/itsfunny/go-cell/base/core/services"
 	"github.com/itsfunny/go-cell/component/codec"
 	"sync"
@@ -25,9 +25,12 @@ type DefaultPeerManager struct {
 	forwardMessageChan chan interface{}
 
 	seal bool
+
+	bus eventbus.ICommonEventBus
 }
 
-func NewDefaultPeerManager(ctx context.Context, ddd *component.DDDComponent, cdc *codec.CodecComponent) types.IPeerManager {
+func NewDefaultPeerManager(ctx context.Context,
+	ddd *component.DDDComponent, cdc *codec.CodecComponent, bus eventbus.ICommonEventBus) types.IPeerManager {
 	ret := &DefaultPeerManager{
 		mutex:   sync.RWMutex{},
 		members: make(map[types.PeerId]types.IPeerNode),
@@ -35,6 +38,7 @@ func NewDefaultPeerManager(ctx context.Context, ddd *component.DDDComponent, cdc
 	ret.BaseComponent = component.NewBaseComponent(ctx, enums.PeerManagerModule, ret, ddd, cdc)
 	// TODO, configurable
 	ret.forwardMessageChan = make(chan interface{}, 100)
+	ret.bus = bus
 	return ret
 }
 func (d *DefaultPeerManager) Seal() {
@@ -70,9 +74,7 @@ func (d *DefaultPeerManager) Register(wrapper *types.PeerWrapper) {
 	node.From(wrapper)
 	d.members[node.PeerId()] = node
 
-	d.Send(sdk.EmptyCellContext(context.Background()), func() sdk.CellRequest {
-		return wrapper
-	})
+	types.PublishPeerManagerEvent(d.bus, wrapper)
 }
 
 func (d *DefaultPeerManager) ForwardMessage() chan<- interface{} {

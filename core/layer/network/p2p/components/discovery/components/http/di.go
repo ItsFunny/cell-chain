@@ -13,6 +13,7 @@ import (
 	"github.com/itsfunny/go-cell/component/codec"
 	"github.com/itsfunny/go-cell/di"
 	"github.com/itsfunny/go-cell/extension/http"
+	"github.com/itsfunny/go-cell/extension/swagger"
 	"github.com/itsfunny/go-cell/framework/http/config"
 	"go.uber.org/fx"
 	"reflect"
@@ -23,6 +24,7 @@ var (
 		return fx.Options(
 			http.HttpModule(),
 			components.DIDiscoveryModule(),
+			swagger.SwaggerModule(),
 			ddd.DIHttpDDDHandler,
 			command.Commands,
 			fx.Provide(discovery.NewHttpDiscoveryComponent),
@@ -51,11 +53,7 @@ func (d *HttpDiscoveryExtension) OnExtensionInit(ctx extension.INodeContext) err
 	ra := config.HttpConfiguration{}
 	cdc.MustUnMarshal(data, &ra)
 	ip := ctx.GetIp()
-	node := peermanager.NewDefaultPeerNode(types.PeerId(d.cfg.PeerId), types.PeerMetaData{
-		Domain: d.cfg.OutputAddress,
-		Ip:     ip,
-		Port:   ra.Port,
-	})
+	node := peermanager.NewDefaultPeerNode(types.PeerId(d.cfg.PeerId), *types.NewPeerMetaData(d.cfg.OutputAddress, ip, ra.Protocol, ra.Port))
 	mana := d.BaseDiscoveryExtension.D.GetPeerManager()
 	mana.SetupSelfNode(node)
 	return nil

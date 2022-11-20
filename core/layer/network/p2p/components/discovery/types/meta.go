@@ -7,10 +7,16 @@ import (
 	"github.com/itsfunny/go-cell/sdk/common"
 )
 
+// TODO, add validbasic
 type PeerMetaData struct {
-	Domain string // optional
-	Ip     string // optional
-	Port   uint
+	Domain   string // optional
+	Ip       string // optional
+	Protocol string // http,https
+	Port     uint
+}
+
+func NewPeerMetaData(domain string, ip string, protocol string, port uint) *PeerMetaData {
+	return &PeerMetaData{Domain: domain, Ip: ip, Protocol: protocol, Port: port}
 }
 
 func (m PeerMetaData) ValidBasic() error {
@@ -26,5 +32,5 @@ func (m PeerMetaData) GetOutPutAddress() string {
 	if len(m.Domain) > 0 {
 		return m.Domain
 	}
-	return fmt.Sprintf("%s:%d", m.Ip, m.Port)
+	return fmt.Sprintf("%s://%s:%d", m.Protocol, m.Ip, m.Port)
 }

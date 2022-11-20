@@ -12,7 +12,7 @@ import (
 
 func newPeer2PeerCommand(ddd *component.DDDComponent) reactor.ICommand {
 	return &reactor.Command{
-		ProtocolID: types3.Peer2Peer,
+		ProtocolID: types3.APIPeer2Peer,
 		PreRun:     nil,
 		Run: func(ctx reactor.IBuzzContext, reqData interface{}) error {
 			cellCtx := types.CellContext{}

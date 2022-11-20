@@ -33,12 +33,11 @@ func (p *ProbeEnvelopeHandler) Handler(ctx *pipeline.Context, env *types2.Envelo
 	}
 	if !p.peerManager.Have(probeReq.PeerId) {
 		logrusplugin.MInfo(enums.ProbeHandler, "unknown probe", "msg", probeReq)
-		return nil
 	}
 	// send response to sync data
 	selfNode := p.peerManager.GetSelfNode()
 	probeResponse := types.NewProbeResponse(selfNode.PeerId(), selfNode.MetaData())
-	types.PublishDiscoverySendMessageEvent(p.bus, types.NewSendToPeerRequest(probeReq.PeerId.ToString(),
+	types.PublishDiscoverySendMessageEvent(p.bus, types.NewSendToPeerRequest(probeReq.SelfMetaData.GetOutPutAddress(),
 		types.CreateProbeEnvelopResponse(p.cdc.GetCodec(),
 			env.Header.SequenceId, probeResponse)))
 	return nil

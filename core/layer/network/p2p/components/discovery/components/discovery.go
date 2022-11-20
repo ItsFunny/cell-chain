@@ -26,6 +26,8 @@ type BaseDiscoveryComponent struct {
 	Config *config.DiscoveryConfiguration
 	Bus    eventbus.ICommonEventBus
 	sub    eventbus.Subscription
+
+	receive chan interface{}
 }
 
 func NewBaseDiscoveryComponent(
@@ -44,6 +46,7 @@ func NewBaseDiscoveryComponent(
 	ret.sub = subscribe
 	// TODO, configurable
 	ret.Config = config.DefaultDiscoveryConfiguration()
+	ret.receive = make(chan interface{}, 100)
 	return ret
 }
 
@@ -59,10 +62,14 @@ func (b BaseDiscoveryComponent) onRecv() {
 	for {
 		select {
 		case msg := <-ch:
+			if err := b.handleMsg(msg.Data()); nil != err {
+				b.Logger.Error("handle failed", "err", err)
+			}
+		case msg := <-b.receive:
 			if err := b.handleMsg(msg); nil != err {
 				b.Logger.Error("handle failed", "err", err)
 			}
-		case <-b.sub.Canceled():
+		case <-b.Quit():
 			return
 		}
 	}
@@ -70,7 +77,7 @@ func (b BaseDiscoveryComponent) onRecv() {
 func (b BaseDiscoveryComponent) handleMsg(msg interface{}) error {
 	switch v := msg.(type) {
 	case *types.SendToPeerRequest:
-		b.SendToPeerAsync(sdk.EmptyCellContext(b.GetContext()), *v)
+		b.SendToPeerAsync(sdk.EmptyCellContext(b.GetContext()).WithSeq(v.Envelop.Header.SequenceId), *v)
 	default:
 		b.Logger.Warn("未知的msg", "msg", msg)
 	}
@@ -149,4 +156,8 @@ func (b BaseDiscoveryComponent) BroadCast(ctx sdk.CellContext, req types.BroadCa
 
 func (b BaseDiscoveryComponent) GetPeerManager() types.IPeerManager {
 	return b.PeerManager
+}
+
+func (b BaseDiscoveryComponent) ReceiveChan() chan<- interface{} {
+	return b.receive
 }

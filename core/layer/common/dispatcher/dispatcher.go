@@ -32,6 +32,7 @@ func (m *MsgDispatcher) Handler(ctx *pipeline.Context) (types.CellResponse, type
 	env := req.Envelope
 	protocol := env.Header.Protocol
 	h := m.handlers[protocol]
+	logrusplugin.MInfo(enums.EnvelopeDispatcher, "receive envelope", "sequenceId", env.Header.SequenceId, "protocol", protocol)
 	if h == nil {
 		logrusplugin.MWarn(enums.EnvelopeDispatcher, "unknown envelop", protocol)
 		return nil, types.HandlerFlagNotify, nil

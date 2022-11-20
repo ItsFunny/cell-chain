@@ -47,6 +47,10 @@ func (d *DDDComponent) RegisterDDDHandler(h DDDHandler) {
 			ret, flag, err := h.Handler(ctx)
 			if nil != err {
 				ctx.Promise.Fail(err)
+				d.Logger.Error("handler failed",
+					"err", err.Error(),
+					"handler", h.PredictMsg(),
+					"msg", msg)
 			} else if flag&types.HandlerFlagNotify >= types.HandlerFlagNotify {
 				ctx.Promise.TrySend(ret)
 			}
