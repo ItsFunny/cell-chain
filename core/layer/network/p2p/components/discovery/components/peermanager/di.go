@@ -4,10 +4,14 @@ import (
 	"github.com/itsfunny/cell-chain/core/layer/network/p2p/components/discovery/types"
 	"github.com/itsfunny/go-cell/base/core/services"
 	"github.com/itsfunny/go-cell/base/node/core/extension"
+	"github.com/itsfunny/go-cell/di"
 	"go.uber.org/fx"
 )
 
-var DefaultPeerManagerModule = fx.Provide(NewDefaultPeerManager)
+var DIDefaultPeerManagerModule = fx.Options(
+	fx.Provide(NewDefaultPeerManager),
+	di.RegisterExtension(NewPeerManagerExtension),
+)
 
 type PeerManagerExtension struct {
 	*extension.BaseExtension

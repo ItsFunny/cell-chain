@@ -13,7 +13,6 @@ import (
 	"github.com/itsfunny/go-cell/component/codec"
 	"github.com/itsfunny/go-cell/di"
 	"github.com/itsfunny/go-cell/extension/http"
-	"github.com/itsfunny/go-cell/extension/swagger"
 	"github.com/itsfunny/go-cell/framework/http/config"
 	"go.uber.org/fx"
 	"reflect"
@@ -24,7 +23,6 @@ var (
 		return fx.Options(
 			http.HttpModule(),
 			components.DIDiscoveryModule(),
-			swagger.SwaggerModule(),
 			ddd.DIHttpDDDHandler,
 			command.Commands,
 			fx.Provide(discovery.NewHttpDiscoveryComponent),

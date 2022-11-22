@@ -14,7 +14,7 @@ var (
 	DIDiscoveryModule di.OptionBuilder = func() fx.Option {
 		return fx.Options(
 			ddd.DiscoveryEnvelopeHandlerModule,
-			peermanager.DefaultPeerManagerModule,
+			peermanager.DIDefaultPeerManagerModule,
 		)
 	}
 )
